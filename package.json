@@ -32,6 +32,8 @@
     "seneca": "3.x"
   },
   "dependencies": {
-    "moment": "^2.15.2"
+    "moment": "^2.15.2",
+    "passport-strategy": "^1.0.0",
+    "pause": "^0.1.0"
   }
 }
