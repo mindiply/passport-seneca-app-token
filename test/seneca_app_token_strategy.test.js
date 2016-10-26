@@ -44,7 +44,7 @@ let mock_stream = {
 
 describe('Check seneca passport app token strategy', function () {
 
-    let SenecaAppTokenStrategy = require('../../lib/client/seneca_app_token_strategy')
+    let SenecaAppTokenStrategy = require('../lib')
     let strategy = new SenecaAppTokenStrategy(mock_seneca)
 
     describe('Handling request with correct credentials', function() {

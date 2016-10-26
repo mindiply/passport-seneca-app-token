@@ -1,39 +1,27 @@
-# Passport Seneca App Token
+# Passport Seneca App Token strategy
 
-The package provides utility functions to create a microservice that
-handles authentication and provides the creation of app tokens for other
-microservices.
+Passport strategy that talks with a seneca microserver to validate app
+tokens transmitted in the **SENECA-APP-TOKEN** custom header. 
 
-Clients of the microservice then use a passport strategy which doesn't
-use session but that communicates with the service to verify the validity
-of the application token.
+The microserver project is [seneca-app-token-service][seneca-app-token-service].
 
-It's mean to be a lighter way verification mechanism than a full OAuth
-implementation.
+Clients should acquire the app token from the authentication server and
+pass it on to the microservice every time they need to access a protected
+resource.
+
+The strategy will verify the token with the microservice and authenticate 
+the user.
+
+There should be no support for authentication session persistance.
+
 
 # Usage
 
-## MicroServer side
-
-The key function provided for the microservice is **createAppToken(user_id, scopes)**,
-where user_id is a string serialization of the user_id unique identifier,
-and scopes is an array of scopes.
-
-The microservice server will need to expose via express or other
-framework the generated tokens. Tokens will by default expire after 60 
-minutes.
-
-The microserver also provides a seneca service that will provide the 
-service {role : 'identity', action : 'verify_token'} that expects the field 
-*token* as payload.
-
-The service is used on the client side to serialize/deserialize users.
-
-Users need to configure the plugin by providing a app_tokens.js
- 
-
+To be shown 
 
 
 # License
 
 Apache 2.0
+
+[seneca-app-token-service]: https://www.npmjs.com/package/@bongione/seneca-app-token-service

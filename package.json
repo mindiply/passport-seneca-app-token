@@ -1,6 +1,6 @@
 {
   "name": "@bongione/passport-seneca-app-token",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Microservice client and server. Server generates app tokens, client consumes them using seneca for communication",
   "main": "lib/client/index.js",
   "scripts": {
@@ -26,14 +26,9 @@
     "babel-register": "^6.16.3",
     "chai": "^3.5.0",
     "chai-passport-strategy": "^1.0.0",
-    "mocha": "^3.1.2",
-    "seneca": "^3.2.1"
-  },
-  "peerDependencies": {
-    "seneca": "3.x"
+    "mocha": "^3.1.2"
   },
   "dependencies": {
-    "moment": "^2.15.2",
     "passport-strategy": "^1.0.0",
     "pause": "^0.1.0"
   }
