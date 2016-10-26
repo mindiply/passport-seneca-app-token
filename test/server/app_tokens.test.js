@@ -55,7 +55,7 @@ const TOKEN_EXPIRATION_SECONDS = 60
 
 describe('Application token generation', function () {
 
-    let {createAppToken, userScopesByToken} = require('../lib/server').appTokens({redis_client, log, expiration_seconds : TOKEN_EXPIRATION_SECONDS})
+    let {createAppToken, userScopesByToken} = require('../../lib/server').appTokens({redis_client, log, expiration_seconds : TOKEN_EXPIRATION_SECONDS})
 
     it('Generate and retrieve a token for test zone', function() {
 

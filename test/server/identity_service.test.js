@@ -44,7 +44,7 @@ function testUserScopeByToken(token) {
 describe('Seneca verification token service', function () {
 
     let seneca = require('seneca')()
-    let {senecaIdentityService} = require('../lib/server')
+    let {senecaIdentityService} = require('../../lib/server')
     seneca.use(senecaIdentityService, { deserializeUser : testDeserializeUser,  app_tokens : {userScopeByToken : testUserScopeByToken}})
 
     it('Look for and return test user', function(done) {
