@@ -1,8 +1,8 @@
 {
   "name": "@bongione/passport-seneca-app-token",
-  "version": "0.2.0",
-  "description": "Microservice client and server. Server generates app tokens, client consumes them using seneca for communication",
-  "main": "lib/client/index.js",
+  "version": "0.2.1",
+  "description": "Passport strategy that uses a seneca client and tokens in the http request to authenticate users",
+  "main": "lib/index.js",
   "scripts": {
     "test": "mocha --compilers js:babel-register --recursive"
   },
