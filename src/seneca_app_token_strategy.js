@@ -7,22 +7,28 @@
 let util = require('util')
 let Strategy = require('passport-strategy')
 let pause = require('pause')
+let promisify = require('es6-promisify')
 
 /**
  *
  * Constructor for the Seneca app token strategy.
  *
- * @param seneca_client seneca instance with client configured to interact with the service providing the token feedback
+ * @param senecaClient seneca instance with client configured to interact with the service providing the token feedback
  * @api public
  */
-function SenecaAppTokenStrategy(seneca_client) {
-    Strategy.call(this);
-    this.name = 'seneca_app_token_strategy';
-    this._seneca_client = seneca_client
+function SenecaAppTokenStrategy (senecaClient) {
+    Strategy.call(this)
+    this.name = 'seneca_app_token_strategy'
+    this._senecaClient = Object.assign({}, senecaClient)
+
+    if (!this._senecaClient.microServiceSend) {
+        let senecaAct = promisify(this._senecaClient.act, this._senecaClient)
+        this._senecaClient.microServiceSend = (cmd) => {
+            return senecaAct(cmd)
+        }
+    }
 }
-
-util.inherits(SenecaAppTokenStrategy, Strategy);
-
+util.inherits(SenecaAppTokenStrategy, Strategy)
 
 /**
  * Authenticate request by communicating with seneca microservice using
@@ -36,34 +42,34 @@ util.inherits(SenecaAppTokenStrategy, Strategy);
  * @param {Object} options
  * @api protected
  */
-SenecaAppTokenStrategy.prototype.authenticate = function(req, options) {
-    if (!req._passport) { return this.error(new Error('passport.initialize() middleware not in use')); }
-    options = options || { seneca : {} };
+SenecaAppTokenStrategy.prototype.authenticate = function (req, options) {
+    if (!req._passport) { return this.error(new Error('passport.initialize() middleware not in use')) }
+    options = options || { seneca: {} }
 
     let self = this
-    let paused=pause(req)
+    let paused = pause(req)
 
     try {
         // Extract the token information from the request header, fail if not there
         let token = req.get('SENECA-APP-TOKEN')
-        if (!token || !this._seneca_client) {
+        if (!token || !this._senecaClient) {
             self.fail()
             paused.resume()
-            return;
+            return
         }
 
         // Send token info to seneca for verification
         let msg = {
-            role : 'identity',
-            action : 'verify_token',
+            role: 'identity',
+            action: 'verify_token',
             token
         }
-        this._seneca_client.act(msg)
-            .then(auth_data => {
-                if (auth_data && auth_data.result === 'ok' && auth_data.user && auth_data.scopes) {
-                    self.success(auth_data.user, {scopes : auth_data.scopes})
+        this._senecaClient.microServiceSend(msg)
+            .then(authData => {
+                if (authData && authData.result === 'ok' && authData.user && authData.scopes) {
+                    self.success(authData.user, {scopes: authData.scopes})
                 } else {
-                    if (auth_data && auth_data.result === 'error' && auth_data.details) {
+                    if (authData && authData.result === 'error' && authData.details) {
                         self.fail()
                     } else {
                         self.error('Unexpected message returned from token verification service')
@@ -81,7 +87,6 @@ SenecaAppTokenStrategy.prototype.authenticate = function(req, options) {
         paused.resume()
     }
 }
-
 
 /**
  * Expose `SenecaAppTokenStrategy`.
